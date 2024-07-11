@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+// styles.scss
+@use "@angular/material" as mat;
+@use "./styles/themes/all.scss" as themes;
+@use "./styles/typography/config" as typography;
+
+@include mat.core();
+@include mat.core-theme(themes.$my-app-light-theme);
+@include mat.button-theme(themes.$my-app-light-theme);
+@include mat.typography-hierarchy(typography.$my-app-typography);
+@include mat.icon-theme(themes.$my-app-light-theme);
+@include mat.menu-theme(themes.$my-app-light-theme);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  @include mat.core-color(themes.$my-app-light-theme);
+  @include mat.button-color(themes.$my-app-light-theme);
+  @include mat.icon-color(themes.$my-app-light-theme);
+  @include mat.menu-color(themes.$my-app-light-theme);
+}
+
