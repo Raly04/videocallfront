@@ -6,9 +6,9 @@
 @include mat.core();
 @include mat.core-theme(themes.$my-app-light-theme);
 @include mat.button-theme(themes.$my-app-light-theme);
-@include mat.typography-hierarchy(typography.$my-app-typography);
 @include mat.icon-theme(themes.$my-app-light-theme);
 @include mat.menu-theme(themes.$my-app-light-theme);
+@include mat.typography-hierarchy(typography.$my-app-typography);
 
 @tailwind base;
 @tailwind components;

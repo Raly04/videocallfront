@@ -1,17 +1,1 @@
-<!-- src/app/app.component.html -->
-<div class="w-full flex flex-row items-center justify-between">
-  <h1>See-me</h1>
-  <button
-    mat-icon-button
-    class="theme-toggle"
-    aria-label="Change theme"
-    [matMenuTriggerFor]="themeMenu"
-  >
-    <mat-icon>{{ (isDark$ | async) === true ? "dark_mode" : "light_mode" }}</mat-icon>
-  </button>
-  <mat-menu #themeMenu="matMenu">
-    <button mat-menu-item (click)="changeTheme('auto')">System</button>
-    <button mat-menu-item (click)="changeTheme('light')">Light</button>
-    <button mat-menu-item (click)="changeTheme('dark')">Dark</button>
-  </mat-menu>
-</div>
+<router-outlet></router-outlet>
