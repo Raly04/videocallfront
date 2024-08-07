@@ -16,6 +16,7 @@ export interface Mess {
   content: string,
   sender: string,
   recipient: string,
+  date : Date,
 }
 
 export interface AuthJwtResponse {

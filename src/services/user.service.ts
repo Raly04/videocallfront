@@ -4,7 +4,7 @@ import {AuthResponse, RefreshTokenResponse, User} from "../models/model";
 import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {USER_API} from "../data/const";
 import {StorageService} from "./storage.service";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+
 import {catchError, switchMap} from "rxjs/operators";
 
 @Injectable({
@@ -13,7 +13,6 @@ import {catchError, switchMap} from "rxjs/operators";
 export class UserService {
   private readonly httpClient = inject(HttpClient);
   private readonly storage = inject(StorageService);
-  private readonly destroyRef = inject(DestroyRef);
   private refreshTokenInProgress = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 

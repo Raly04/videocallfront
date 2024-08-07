@@ -3,6 +3,8 @@ import {map} from "rxjs";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {RxStompConfig} from "@stomp/rx-stomp";
 import {Mess} from "../models/model";
+import { HttpClient } from '@angular/common/http';
+import { MESSAGE_API } from '../data/const';
 
 const rxStompConfig: RxStompConfig = {
   // Which server?
@@ -37,7 +39,9 @@ const rxStompConfig: RxStompConfig = {
   providedIn: 'root',
 })
 export class ChatService {
+
   rxStompService = inject(RxStompService);
+  httpClient = inject(HttpClient);
   private username!: string;
   private groups!: string[];
 
@@ -73,7 +77,8 @@ export class ChatService {
       id: 0,
       sender: this.username,
       recipient: isGroup ? `group:${recipient}` : recipient,
-      content: content
+      content: content,
+      date : new Date()
     };
     this.rxStompService.publish({destination: '/app/send', body: JSON.stringify(message)});
   }
@@ -81,5 +86,9 @@ export class ChatService {
   watchMessages() {
     // Subscribe to personal messages
     return this.rxStompService.watch(`/queue/${this.username}`);
+  }
+
+  getHistoryBetweenTwoUser(from : string, to : string){
+    return this.httpClient.post<Mess[]>(MESSAGE_API+"/getHistoryBetweenTwoUser" , {from,to})
   }
 }

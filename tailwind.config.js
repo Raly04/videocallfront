@@ -12,7 +12,7 @@ module.exports = {
         foregroundBlack : "#111111",
       },
       fontSize : {
-        vsm : "12px"
+        vsm : "10px"
       },height :{
         "1/8" : "12.5%",
         "6/8" : "75%",

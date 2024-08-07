@@ -1,17 +1,17 @@
-import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
-import {AvatarModule} from "primeng/avatar";
-import {Button} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {ChipModule} from "primeng/chip";
-import {DatePipe} from "@angular/common";
-import {UserService} from "../../services/user.service";
-import {Mess, User} from "../../models/model";
-import {ActivatedRoute} from "@angular/router";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {UserInfoService} from "../../services/user-info.service";
-import {ChatService} from "../../services/chat.service";
-import {FormsModule} from "@angular/forms";
-import {map} from "rxjs";
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { AvatarModule } from "primeng/avatar";
+import { Button } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { ChipModule } from "primeng/chip";
+import { DatePipe } from "@angular/common";
+import { UserService } from "../../services/user.service";
+import { Mess, User } from "../../models/model";
+import { ActivatedRoute } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { UserInfoService } from "../../services/user-info.service";
+import { ChatService } from "../../services/chat.service";
+import { FormsModule } from "@angular/forms";
+import { map } from "rxjs";
 
 @Component({
   selector: 'app-message',
@@ -27,9 +27,10 @@ import {map} from "rxjs";
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
+
 export default class MessageComponent {
   message: string = "";
-  conversations!: Mess[];
+  conversations = signal<Mess[]>([]);
   date = new Date();
   currentUserInfo!: User;
   receiverUserInfo = signal<User | null>(null);
@@ -70,7 +71,14 @@ export default class MessageComponent {
     this.chatService.watchMessages()
       .pipe(map((message) => message.body))
       .subscribe((messageBody) => {
-        console.log('Received: ' + JSON.parse(messageBody));
+        console.log('Received: ' + messageBody);
+        let receivedMessage = JSON.parse(messageBody) as Mess;
+        if (receivedMessage.sender === this.receiverUserInfo()?.username && receivedMessage.content.trim()) {
+          this.conversations.update(conversations => [
+            ...conversations,
+            receivedMessage
+          ]);
+        }
       });
   }
 
@@ -79,10 +87,35 @@ export default class MessageComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(res => {
         this.receiverUserInfo.set(res);
+        this.chatService.getHistoryBetweenTwoUser(this.currentUserInfo.username, this.receiverUserInfo()?.username as string)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(
+            map(messages => messages.map(message => ({
+              ...message,
+              date: new Date(message.date)
+            })))
+          )
+          .subscribe((res) => {
+            console.log("HISTORY",res)
+            this.conversations.set(res);
+          })
       });
   }
 
-  send(){
-    this.chatService.sendMessage(this.receiverUserInfo()?.username as string ,this.message,false);
+  send() {
+    if (this.receiverUserInfo() && this.message.trim()) {
+      this.conversations.update(conversations => [
+        ...conversations,
+        {
+          id: 0,
+          sender: this.currentUserInfo.username,
+          recipient: this.receiverUserInfo()!.username,
+          content: this.message.trim(),
+          date : new Date(),
+        }
+      ]);
+      this.chatService.sendMessage(this.receiverUserInfo()!.username, this.message.trim(), false);
+      this.message = ""; // Clear the message after sending
+    }
   }
 }
