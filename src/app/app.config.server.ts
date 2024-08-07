@@ -1,12 +1,13 @@
 import {ApplicationConfig, mergeApplicationConfig} from '@angular/core';
 import {provideServerRendering} from '@angular/platform-server';
 import {appConfig} from './app.config';
-import {provideHttpClient} from "@angular/common/http";
+import {provideHttpClient, withFetch, withInterceptors} from "@angular/common/http";
+import {TokenInterceptorService} from "../services/token-interceptor.service";
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    provideHttpClient()
+    provideHttpClient(withFetch())
   ]
 };
 

@@ -33,16 +33,14 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/primeng/resources/themes/aura-light-green/theme.css",
+              "node_modules/primeng/resources/themes/aura-dark-green/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "primeicons/primeicons.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "prerender": false,
+            "ssr": false
           },
           "configurations": {
             "production": {

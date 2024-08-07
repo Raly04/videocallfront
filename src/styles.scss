@@ -3,12 +3,30 @@
 @layer tailwind-base {
   @tailwind base;
 }
-
+@font-face {
+  font-family: "Gabarito";
+  src: url("./fonts/static/JetBrainsMono-Thin.ttf") format("truetype");
+}
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
 }
 
 body{
-  font-family: "Gabarito", sans-serif;
+  font-family: "Inter var", sans-serif !important;
+}
+.line{
+  @apply bg-secondary h-0.5 w-full;
+}
+
+.p-tabview .p-tabview-panels {
+  padding: 0;
+}
+
+app-account , app-message{
+  @apply w-5/6 p-8;
+}
+
+.flex-center{
+  @apply flex flex-row items-center;
 }

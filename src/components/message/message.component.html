@@ -1,0 +1,30 @@
+<div class="w-full h-1/8 flex-center justify-between">
+  <div class="flex-center gap-4">
+    <p-avatar icon="pi pi-user" size="large"/>
+    <p class="text-xl">{{receiverUserInfo()?.username}}</p>
+  </div>
+  <div class="flex-center gap-2">
+    <p-button [text]="true" icon="pi pi-phone" size="small"/>
+    <p-button [text]="true" icon="pi pi-video" size="small"/>
+  </div>
+</div>
+<div class="h-6/8">
+  <div class="">
+    <p class="p-text-secondary text-vsm">{{ date | date  }}</p>
+    <div class="bg-green-100 rounded-br-xl rounded-t-xl py-1 px-3 w-fit max-w-[500px] break-words p-text-secondary text-vsm">Hejjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjllo</div>
+  </div>
+  <div class="float-right">
+    <p class="p-text-secondary text-vsm text-end">{{ date | date }}</p>
+    <div class="bg-secondary py-1 px-3 float-right rounded-bl-xl rounded-t-xl w-fit max-w-[500px] p-text-secondary text-vsm break-words">Hdkvziodhfiohdihfiohfzeihiuhpqioejzrnoqiioshfzeknfklbihsiohiohdifbbzenklfenkljfiiojsiohdifbzejbfjenifhiohwioxhcjbzje bjbfksenhichuihuicgvjs bn,e fn, dn,bjkcbjwhjbfjn fn, w;,dfkqjiojfiehfjbjgn e!zmlf,lhiodfi</div>
+  </div>
+</div>
+<div class="line"></div>
+<div class="w-full h-1/8 flex-center justify-between gap-4">
+  <div class="flex-center">
+    <p-button [text]="true" icon="pi pi-paperclip" size="small"/>
+    <p-button [text]="true" icon="pi pi-camera" size="small"/>
+    <p-button [text]="true" icon="pi pi-image" size="small"/>
+  </div>
+  <input class="w-full text-vsm" pInputText placeholder="Tap here ..." [(ngModel)]="message">
+  <p-button [text]="true" icon="pi pi-send" size="small" (click)="send()"/>
+</div>

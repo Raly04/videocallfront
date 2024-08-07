@@ -1,0 +1,17 @@
+<div class="flex flex-row items-center justify-start gap-4">
+  <div class="relative">
+    <img class="rounded-full border-primary border-2" alt="" height="192" src="../src/assets/webstorm.png" width="192">
+    <p-fileUpload id="select-avatar" (onSelect)="upload($event)" mode="basic" accept="image/*" maxFileSize="100000000" chooseIcon="pi pi-folder-open" class="right-0 top-0 absolute"/>
+  </div>
+  <div class="w-full">
+    <div class="flex flex-row items-center justify-between">
+      <div class="text-4xl mb-3">Username</div>
+      <div class="flex flex-row items-center gap-2">
+        <p-button [outlined]="true" icon="pi pi-plus" label="Add to contacts" size="small"/>
+        <p-button icon="pi pi-send" label="Send message" size="small"/>
+      </div>
+    </div>
+    <div class="line"></div>
+  </div>
+</div>
+<p-toast/>
