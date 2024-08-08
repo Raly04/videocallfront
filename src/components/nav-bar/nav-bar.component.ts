@@ -1,18 +1,18 @@
-import {Component, DestroyRef, inject} from '@angular/core';
-import {Button} from "primeng/button";
-import {DialogModule} from "primeng/dialog";
-import {InputTextModule} from "primeng/inputtext";
-import {IconFieldModule} from "primeng/iconfield";
-import {InputIconModule} from "primeng/inputicon";
-import {PasswordModule} from "primeng/password";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {UserService} from "../../services/user.service";
-import {User} from "../../models/model";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
-import {NgOptimizedImage} from "@angular/common";
-import {StorageService} from "../../services/storage.service";
-import {UserInfoService} from "../../services/user-info.service";
+import { Component, DestroyRef, inject } from '@angular/core';
+import { Button } from "primeng/button";
+import { DialogModule } from "primeng/dialog";
+import { InputTextModule } from "primeng/inputtext";
+import { IconFieldModule } from "primeng/iconfield";
+import { InputIconModule } from "primeng/inputicon";
+import { PasswordModule } from "primeng/password";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { UserService } from "../../services/user.service";
+import { User } from "../../models/model";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { NgOptimizedImage } from "@angular/common";
+import { StorageService } from "../../services/storage.service";
+import { UserInfoService } from "../../services/user-info.service";
 
 @Component({
   selector: 'app-nav-bar',
@@ -46,17 +46,17 @@ export class NavBarComponent {
 
   //Form control
   userLoginProfile = new FormGroup({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required)
-    }
+    username: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
+  }
   )
 
   userRegisterProfile = new FormGroup({
-      mail: new FormControl('', [Validators.required,Validators.email]),
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      confirmPassword: new FormControl('', Validators.required)
-    }
+    mail: new FormControl('', [Validators.required, Validators.email]),
+    username: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+    confirmPassword: new FormControl('', Validators.required)
+  }
   )
 
   // Methods
@@ -67,11 +67,11 @@ export class NavBarComponent {
       .subscribe(
         res => {
           console.log(res)
-          if(res.content.length === 2) {
+          if (res.content.length === 2) {
             this.router.navigateByUrl("/index").then(r => console.log(r));
             this.userInfoService.setCurrentUser(res.user);
-            this.storage.set("accessToken",res.content[0]);
-            this.storage.set("refreshToken",res.content[1]);
+            this.storage.set("accessToken", res.content[0]);
+            this.storage.set("refreshToken", res.content[1]);
           }
         }
       );
@@ -93,7 +93,7 @@ export class NavBarComponent {
     this.isLoginDialogVisible = true;
   }
 
-  showRegisterDialog(){
+  showRegisterDialog() {
     this.isLoginDialogVisible = false;
     this.isRegisterDialogVisible = true;
   }

@@ -1,10 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthResponse, User } from "../models/model";
 import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { USER_API } from "../data/const";
 import { StorageService } from "./storage.service";
-
 import { catchError, switchMap } from "rxjs/operators";
 
 @Injectable({
@@ -29,20 +28,26 @@ export class UserService {
     return this.httpClient.get<User>(USER_API + "/findById/" + id);
   }
 
+  getUserAvatar(userId: number): Observable<Blob> {
+    const headers = new HttpHeaders({ 'Accept': 'image/*' });
+    return this.httpClient.get<Blob>(`${USER_API}/avatar/${userId}`, {
+      headers: headers,
+      responseType: 'blob' as 'json'  // Response as Blob
+    });
+  }
+
   getAll() {
     return this.httpClient.get<User[]>(USER_API + "/getAll");
   }
 
   uploadAvatar(userId: number, file: File) {
-    const data = new FormData();
-    data.append("avatar", file);
-    return this.httpClient.post<any>(USER_API + "/saveFile", {
-      userId: userId,
-      avatar: data
-    }, {
-      reportProgress: true,
-    });
-  }
+  const data = new FormData();
+  data.append("avatar", file);
+  data.append("userId", userId.toString());
+  return this.httpClient.post<any>(USER_API + "/saveFile", data, {
+    reportProgress: true,
+  });
+}
 
   refreshToken(): Observable<any> {
     if (this.refreshTokenInProgress) {

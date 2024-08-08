@@ -12,6 +12,7 @@ import { AsyncPipe, NgOptimizedImage } from "@angular/common";
 import { Router } from "@angular/router";
 import { BadgeModule } from "primeng/badge";
 import { UserInfoService } from "../../services/user-info.service";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-side-bar',
@@ -35,12 +36,15 @@ export class SideBarComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(Router);
   userInfoService = inject(UserInfoService);
+  sanitizer = inject(DomSanitizer);
 
   contacts!: User[];
   selectedUser!: User;
+  currentUserAvatarUrl !: SafeUrl;
 
   constructor() {
-    this.getAllUsers()
+    this.getAllUsers();
+    this.loadUserAvatar();
   }
 
   getAllUsers() {
@@ -58,5 +62,12 @@ export class SideBarComponent {
 
   openUserAccount() {
     this.route.navigateByUrl("/index/account/" + this.userInfoService.currentUser.id).then();
+  }
+
+  loadUserAvatar(): void {
+    this.userService.getUserAvatar(this.userInfoService.currentUser.id).subscribe(blob => {
+      const objectURL = URL.createObjectURL(blob);
+      this.currentUserAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+    });
   }
 }
