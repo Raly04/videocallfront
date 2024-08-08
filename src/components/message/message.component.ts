@@ -31,7 +31,6 @@ import { map } from "rxjs";
 export default class MessageComponent {
   message: string = "";
   conversations = signal<Mess[]>([]);
-  date = new Date();
   currentUserInfo!: User;
   receiverUserInfo = signal<User | null>(null);
   receiverUserId = signal<number | null>(null);
