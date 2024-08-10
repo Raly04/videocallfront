@@ -1,13 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { Button } from "primeng/button";
-import { FileSelectEvent, FileUploadModule } from "primeng/fileupload";
+import { FileSelectEvent, FileUploadEvent, FileUploadModule } from "primeng/fileupload";
 import { MessageModule } from "primeng/message";
 import { MessageService } from "primeng/api";
 import { ToastModule } from "primeng/toast";
 import { UserService } from "../../services/user.service";
 import { ActivatedRoute } from "@angular/router";
 import { User } from "../../models/model";
-import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-account',
@@ -32,6 +33,7 @@ export default class AccountComponent {
   userService = inject(UserService);
   activatedRoute = inject(ActivatedRoute);
   sanitizer = inject(DomSanitizer);
+  destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     const userId = this.activatedRoute.snapshot.params['id'];
@@ -48,17 +50,28 @@ export default class AccountComponent {
   }
 
   upload(event: FileSelectEvent) {
-    this.messageService.add({ severity: "secondary", detail: "Hello" });
-    console.log(event.files[0])
-    this.userService.uploadAvatar(this.currentUserId(), event.files[0]).subscribe(res => {
-      console.log(res);
-    })
+    console.log(event.files[0]);
+    this.userService.uploadAvatar(this.currentUserId(), event.files[0])
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: (res) => {
+        this.loadUserAvatar();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Avatar uploaded successfully' })
+      },
+      error: (err) => {
+        console.error('Upload failed:', err);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Avatar upload failed' });
+      }
+    });
   }
 
   loadUserAvatar(): void {
-    this.userService.getUserAvatar(this.currentUserId()).subscribe(blob => {
+    this.userService.getUserAvatar(this.currentUserId())
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(blob => {
       const objectURL = URL.createObjectURL(blob);
       this.currentUserAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+      console.log("Uploaded avatar");
     });
   }
 }

@@ -40,11 +40,15 @@ export class UserService {
     return this.httpClient.get<User[]>(USER_API + "/getAll");
   }
 
+  getContacts(id : number) : Observable<User[]> {
+    return this.httpClient.get<User[]>(USER_API + "/contacts/"+id);
+  }
+
   uploadAvatar(userId: number, file: File) {
   const data = new FormData();
   data.append("avatar", file);
   data.append("userId", userId.toString());
-  return this.httpClient.post<any>(USER_API + "/saveFile", data, {
+  return this.httpClient.post<any>(USER_API + "/uploadUserAvatar", data, {
     reportProgress: true,
   });
 }

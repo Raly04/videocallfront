@@ -1,18 +1,24 @@
 <div class="flex flex-row items-center justify-start gap-4">
-  <div class="relative">
+  <div class="relative w-40">
     @if (currentUserAvatarUrl) {
-    <img [src]="currentUserAvatarUrl" alt="" width="192" height="192"/>
+    <img
+      [src]="currentUserAvatarUrl"
+      alt=""
+      class="w-32 h-32 rounded-full object-cover"
+    />
     }@else {
     <i class="pi pi-user"></i>
     }
     <p-fileUpload
-      id="select-avatar"
-      (onSelect)="upload($event)"
+      #avatarUploader
       mode="basic"
+      name="demo[]"
       accept="image/*"
       maxFileSize="100000000"
       chooseIcon="pi pi-folder-open"
       class="right-0 top-0 absolute"
+      (onSelect)="upload($event) ; avatarUploader.clear()"
+      [auto]="true"
     />
   </div>
   <div class="w-full">

@@ -39,6 +39,7 @@ export class SideBarComponent {
   sanitizer = inject(DomSanitizer);
 
   contacts!: User[];
+  allUsers!: User[];
   selectedUser!: User;
   currentUserAvatarUrl !: SafeUrl;
 
@@ -51,9 +52,14 @@ export class SideBarComponent {
     this.userService.getAll()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(res => {
-        this.contacts = res.filter(user => user.username !== this.userInfoService.currentUser.username);
+        this.allUsers = res.filter(user => user.username !== this.userInfoService.currentUser.username);
       }
       )
+
+    this.userService.getContacts(this.userInfoService.currentUser.id)
+      .subscribe(res => {
+        this.contacts = res;
+      })
   }
 
   openUserChat() {
