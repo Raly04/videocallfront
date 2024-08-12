@@ -13,6 +13,7 @@ import { Router } from "@angular/router";
 import { BadgeModule } from "primeng/badge";
 import { UserInfoService } from "../../services/user-info.service";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-side-bar',
@@ -26,7 +27,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
     FormsModule,
     AsyncPipe,
     NgOptimizedImage,
-    BadgeModule
+    BadgeModule,
+    ButtonModule
   ],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss'
@@ -75,5 +77,9 @@ export class SideBarComponent {
       const objectURL = URL.createObjectURL(blob);
       this.currentUserAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
     });
+  }
+
+  sendFriendRequest(id: number) {
+    
   }
 }

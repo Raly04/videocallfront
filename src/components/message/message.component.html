@@ -9,8 +9,8 @@
   </div>
 </div>
 <div class="h-6/8 flex flex-col gap-4">
-  @for (message of conversations(); track $index) { 
-    @if (message.sender === currentUserInfo.username) {
+  @for (message of conversations(); track $index) {
+    @if (message.sender.id === currentUserInfo.id) {
       <div class="">
         <p class="p-text-secondary text-vsm">{{ message.date | date : 'medium' }}</p>
         <div
@@ -28,7 +28,7 @@
           {{ message.content }}
         </div>
       </div>
-    } 
+    }
   }
 </div>
 <div class="line"></div>

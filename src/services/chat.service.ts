@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {map} from "rxjs";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {RxStompConfig} from "@stomp/rx-stomp";
-import {Mess} from "../models/model";
+import {Mess, User} from "../models/model";
 import { HttpClient } from '@angular/common/http';
 import { MESSAGE_API } from '../data/const';
 
@@ -42,7 +42,7 @@ export class ChatService {
 
   rxStompService = inject(RxStompService);
   httpClient = inject(HttpClient);
-  private username!: string;
+  private user!: User;
   private groups!: string[];
 
   constructor() {
@@ -54,7 +54,7 @@ export class ChatService {
     // Subscribe to group messages (assume user is part of multiple groups)
     // Replace with actual groups
     if (this.groups === undefined || this.groups.length < 1) {
-      console.log("The user " + this.username + " has no groups");
+      console.log("The user " + this.user.username + " has no groups");
       return;
     }
 
@@ -67,25 +67,26 @@ export class ChatService {
     });
   }
 
-  setWebSocketCredentials(username: string, groups: string[]) {
-    this.username = username;
+  setWebSocketCredentials(user: User, groups: string[]) {
+    this.user = user;
     this.groups = groups;
   }
 
-  sendMessage(recipient: string, content: string, isGroup: boolean = false) {
-    const message: Mess = {
-      id: 0,
-      sender: this.username,
-      recipient: isGroup ? `group:${recipient}` : recipient,
+  sendMessageToUser(recipient: User, content: string) {
+    const message: Partial<Mess> = {
+      sender: this.user,
+      receiver: recipient,
       content: content,
       date : new Date()
     };
-    this.rxStompService.publish({destination: '/app/send', body: JSON.stringify(message)});
+    console.log("MESSAGE : " , message);
+
+    this.rxStompService.publish({destination: '/app/sendToUser', body: JSON.stringify(message)});
   }
 
   watchMessages() {
     // Subscribe to personal messages
-    return this.rxStompService.watch(`/queue/${this.username}`);
+    return this.rxStompService.watch(`/queue/${this.user.id}`);
   }
 
   getHistoryBetweenTwoUser(from : string, to : string){

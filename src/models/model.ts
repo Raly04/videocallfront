@@ -14,9 +14,16 @@ export interface AuthResponse {
 export interface Mess {
   id: number,
   content: string,
-  sender: string,
-  recipient: string,
+  sender: User,
+  receiver: User | Group,
   date : Date,
+}
+
+export interface Group {
+  id : number,
+  avatar : string,
+  name : string,
+  users : User[],
 }
 
 export interface AuthJwtResponse {

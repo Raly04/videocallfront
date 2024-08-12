@@ -61,7 +61,7 @@ export default class MessageComponent {
 
     //Define websocket credentials
     this.chatService.setWebSocketCredentials(
-      this.userInfoService.currentUser.username,
+      this.userInfoService.currentUser,
       this.userInfoService.currentUser.groups
     );
 
@@ -72,7 +72,7 @@ export default class MessageComponent {
       .subscribe((messageBody) => {
         console.log('Received: ' + messageBody);
         let receivedMessage = JSON.parse(messageBody) as Mess;
-        if (receivedMessage.sender === this.receiverUserInfo()?.username && receivedMessage.content.trim()) {
+        if (receivedMessage.sender.id === this.receiverUserInfo()?.id && receivedMessage.content.trim()) {
           this.conversations.update(conversations => [
             ...conversations,
             receivedMessage
@@ -107,13 +107,15 @@ export default class MessageComponent {
         ...conversations,
         {
           id: 0,
-          sender: this.currentUserInfo.username,
-          recipient: this.receiverUserInfo()!.username,
+          sender: this.currentUserInfo,
+          receiver: this.receiverUserInfo()!,
           content: this.message.trim(),
           date : new Date(),
         }
       ]);
-      this.chatService.sendMessage(this.receiverUserInfo()!.username, this.message.trim(), false);
+      if(this.receiverUserInfo()){
+        this.chatService.sendMessageToUser(this.receiverUserInfo() as User, this.message.trim());
+      }
       this.message = ""; // Clear the message after sending
     }
   }
