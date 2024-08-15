@@ -13,6 +13,7 @@ import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { NgOptimizedImage } from "@angular/common";
 import { StorageService } from "../../services/storage.service";
 import { UserInfoService } from "../../services/user-info.service";
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -43,6 +44,7 @@ export class NavBarComponent {
   router = inject(Router);
   storage = inject(StorageService);
   userInfoService = inject(UserInfoService);
+  chatService = inject(ChatService);
 
   //Form control
   userLoginProfile = new FormGroup({
@@ -70,6 +72,11 @@ export class NavBarComponent {
           if (res.content.length === 2) {
             this.router.navigateByUrl("/index").then(r => console.log(r));
             this.userInfoService.setCurrentUser(res.user);
+            //Define websocket credentials
+            this.chatService.setWebSocketCredentials(
+              user,
+              user.groups
+            );
             this.storage.set("accessToken", res.content[0]);
             this.storage.set("refreshToken", res.content[1]);
           }

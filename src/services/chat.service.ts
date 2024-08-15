@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {map} from "rxjs";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {RxStompConfig} from "@stomp/rx-stomp";
-import {Mess, User} from "../models/model";
+import {FriendRequestNotif, Group, Mess, User} from "../models/model";
 import { HttpClient } from '@angular/common/http';
 import { MESSAGE_API } from '../data/const';
 
@@ -43,7 +43,7 @@ export class ChatService {
   rxStompService = inject(RxStompService);
   httpClient = inject(HttpClient);
   private user!: User;
-  private groups!: string[];
+  private groups!: Group[];
 
   constructor() {
     this.rxStompService.configure(rxStompConfig);
@@ -59,7 +59,7 @@ export class ChatService {
     }
 
     this.groups.forEach((group) => {
-      this.rxStompService.watch(`/topic/groups/${group}`).pipe(
+      this.rxStompService.watch(`/topic/groups/${group.id}`).pipe(
         map((message) => message.body)
       ).subscribe((messageBody) => {
         console.log(`Received in group ${group}: ` + messageBody);
@@ -67,7 +67,7 @@ export class ChatService {
     });
   }
 
-  setWebSocketCredentials(user: User, groups: string[]) {
+  setWebSocketCredentials(user: User, groups: Group[]) {
     this.user = user;
     this.groups = groups;
   }
@@ -84,9 +84,18 @@ export class ChatService {
     this.rxStompService.publish({destination: '/app/sendToUser', body: JSON.stringify(message)});
   }
 
+  notifyFriendRequest(notif : Partial<FriendRequestNotif>){
+    this.rxStompService.publish({destination: '/app/friendRequestNotif', body: JSON.stringify(notif)});
+  }
+
   watchMessages() {
     // Subscribe to personal messages
     return this.rxStompService.watch(`/queue/${this.user.id}`);
+  }
+
+  watchNotifs(){
+    // Subscribe to notifications
+    return this.rxStompService.watch(`/notif/${this.user.id}`);
   }
 
   getHistoryBetweenTwoUser(from : string, to : string){

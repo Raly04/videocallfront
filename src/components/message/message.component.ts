@@ -66,7 +66,6 @@ export default class MessageComponent {
     );
 
     //Start and watch on sockets
-    this.chatService.init();
     this.chatService.watchMessages()
       .pipe(map((message) => message.body))
       .subscribe((messageBody) => {

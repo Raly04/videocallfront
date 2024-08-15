@@ -37,9 +37,20 @@ export const routes: Routes = [
         loadComponent : () => import("../components/account/account.component")
       },
       {
-        path : "message/:id",
-        title : "message",
-        loadComponent : () => import("../components/message/message.component")
+        path : "message",
+        title : "Message",
+        children : [
+          {
+            path : "user/:id",
+            title : "User",
+            loadComponent : () => import("../components/message/message.component")
+          },
+          {
+            path : "group/:id",
+            title : "Group",
+            loadComponent : () => import("../components/message/message.component")
+          },
+        ]
       }
     ]
   }

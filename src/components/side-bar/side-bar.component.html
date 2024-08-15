@@ -1,47 +1,27 @@
 <div class="p-4">
-  <div class="flex flex-row items-center justify-start gap-2 text-primary">
-    <svg
-      fill="currentColor"
-      height="30"
-      viewBox="0 0 182 262"
-      width="30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M89.4185 1.8552C68.3947 5.35346 48.9553 15.0927 33.0829 30.0793C17.0148 45.2508 6.52028 63.9826 1.74576 86.0149C-0.387743 95.8615 -0.602223 114.775 1.30399 124.942C5.2334 145.893 15.4613 165.309 30.571 180.5C49.1313 199.161 71.9488 209.624 99.4018 212.062L110.496 213V238.381V261.159L146.706 223.027C165.122 201.9 181.404 182.879 181.404 182.879C182.606 181.163 182.44 180.966 166.831 165.537C160.165 158.948 154.267 153.278 151.732 150.999C140.36 161.929 124.791 168.668 107.619 168.668C72.7913 168.668 44.558 140.95 44.558 106.758C44.558 72.5666 72.7913 44.8487 107.619 44.8487C124.567 44.8487 139.953 51.4124 151.285 62.0918C156.249 57.9205 181.993 32.1395 181.993 31.2011C181.993 30.136 173.301 22.7411 167.266 18.6722C155.528 10.7583 139.149 4.2652 125.029 1.92829C116.463 0.510337 97.7327 0.47156 89.4185 1.8552Z"
-      />
-      <path
-        d="M89.8444 106.811C89.8444 111.264 86.2345 114.874 81.7815 114.874C77.3284 114.874 73.7185 111.264 73.7185 106.811C73.7185 102.358 77.3284 98.7481 81.7815 98.7481C86.2345 98.7481 89.8444 102.358 89.8444 106.811Z"
-      />
-      <path
-        d="M116.337 106.811C116.337 111.264 112.727 114.874 108.274 114.874C103.821 114.874 100.211 111.264 100.211 106.811C100.211 102.358 103.821 98.7481 108.274 98.7481C112.727 98.7481 116.337 102.358 116.337 106.811Z"
-      />
-      <path
-        d="M142.83 106.811C142.83 111.264 139.22 114.874 134.767 114.874C130.314 114.874 126.704 111.264 126.704 106.811C126.704 102.358 130.314 98.7481 134.767 98.7481C139.22 98.7481 142.83 102.358 142.83 106.811Z"
-      />
-    </svg>
-    <p class="text-xl font-semibold py-2">Discussions</p>
-  </div>
   <p-tabView>
     <p-tabPanel>
       <ng-template pTemplate="header">
-        <p-inputIcon styleClass="pi pi-phone"></p-inputIcon>
+        <div class="flex flex-row items-center gap-2">
+          <p-inputIcon styleClass="pi pi-phone"></p-inputIcon>
+          <p class="text-sm font-normal">Contacts</p>
+        </div>
       </ng-template>
       <div>
         <p-listbox
           [filter]="true"
           [listStyle]="{ 'max-height': '220px' }"
-          [(ngModel)]="selectedUser"
-          (onChange)="openUserChat()"
-          [options]="contacts"
+          [(ngModel)]="selectedContact"
+          (onChange)="openChat()"
+          [options]="userContacts"
           filterPlaceHolder="Search"
-          optionLabel="username"
+          optionLabel="name"
         >
-          <ng-template let-user pTemplate="item">
+          <ng-template let-contact pTemplate="item">
             <div class="flex flex-row items-center gap-4">
               <p-inputIcon styleClass="pi pi-user" />
               <div class="flex flex-col items-start justify-center">
-                <div class="text-sm">{{ user.username }}</div>
+                <div class="text-sm">{{ contact.name }}</div>
                 <div class="p-text-secondary text-vsm">Last message</div>
               </div>
             </div>
@@ -49,44 +29,28 @@
         </p-listbox>
       </div>
     </p-tabPanel>
-    <p-tabPanel header="Header II">
-      <ng-template pTemplate="header">
-        <p-inputIcon styleClass="pi pi-users"></p-inputIcon>
-      </ng-template>
-      <div>
-        <p-iconField iconPosition="right">
-          <p-inputIcon styleClass="pi pi-search"></p-inputIcon>
-          <input
-            class="mt-4"
-            pInputText
-            placeholder="Search"
-            size="12"
-            type="text"
-          />
-        </p-iconField>
-        <p>Search</p>
-      </div>
-    </p-tabPanel>
     <p-tabPanel header="Header III">
       <ng-template pTemplate="header">
-        <p-inputIcon styleClass="pi pi-plus"></p-inputIcon>
+        <div class="flex flex-row items-center gap-2">
+          <p-inputIcon styleClass="pi pi-plus"></p-inputIcon>
+          <p class="text-sm font-normal">Ajouter</p>
+        </div>
       </ng-template>
       <div>
         <p-listbox
           [filter]="true"
           [listStyle]="{ 'max-height': '220px' }"
-          [(ngModel)]="selectedUser"
-          (onChange)="openUserChat()"
-          [options]="allUsers"
+          [(ngModel)]="selectedContact"
+          [options]="allContacts"
           filterPlaceHolder="Search"
-          optionLabel="username"
+          optionLabel="name"
         >
-          <ng-template let-user pTemplate="item">
+          <ng-template let-contact pTemplate="item">
             <div class="flex flex-row items-center justify-between w-full">
               <div class="flex-center gap-4">
                 <p-inputIcon styleClass="pi pi-user" />
                 <div class="flex flex-col items-start justify-center">
-                  <div class="text-sm">{{ user.username }}</div>
+                  <div class="text-sm">{{ contact.name }}</div>
                   <div class="p-text-secondary text-vsm">Last message</div>
                 </div>
               </div>
@@ -95,26 +59,20 @@
                 [rounded]="true"
                 [text]="true"
                 size="small"
-                (onClick)="sendFriendRequest(user.id)"
+                (onClick)="sendFriendRequest(contact)"
               />
             </div>
           </ng-template>
         </p-listbox>
       </div>
     </p-tabPanel>
-    <p-tabPanel header="Header IV">
-      <ng-template pTemplate="header">
-        <p-inputIcon styleClass="pi pi-th-large"></p-inputIcon>
-      </ng-template>
-      <div>hello</div>
-    </p-tabPanel>
   </p-tabView>
 </div>
 <div class="flex-center justify-between gap-4 w-full p-4">
   <div class="flex-center justify-start gap-4">
-    @if (currentUserAvatarUrl) {
+    @if (currentAvatarUrl) {
     <img
-      [src]="currentUserAvatarUrl"
+      [src]="currentAvatarUrl"
       alt=""
       class="w-12 h-12 object-contain rounded-full"
     />
@@ -129,10 +87,12 @@
       styleClass="pi pi-ellipsis-v"
       class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
     />
-    <p-inputIcon
-      styleClass="pi pi-bell"
-      pBadge
-      class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
-    />
+    <span class="p-overlay-badge">
+      <p-inputIcon
+        styleClass="pi pi-bell"
+        class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
+      ></p-inputIcon>
+      <p-badge [value]="notifNumber()"></p-badge>
+    </span>
   </div>
 </div>

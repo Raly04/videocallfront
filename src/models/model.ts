@@ -1,8 +1,11 @@
+import { Avatar } from "primeng/avatar"
+
 export interface User {
   id: number,
   username: string,
+  avatar: string,
   mail: string,
-  groups: string[],
+  groups: Group[],
   password: string
 }
 
@@ -16,14 +19,14 @@ export interface Mess {
   content: string,
   sender: User,
   receiver: User | Group,
-  date : Date,
+  date: Date,
 }
 
 export interface Group {
-  id : number,
-  avatar : string,
-  name : string,
-  users : User[],
+  id: number,
+  avatar: string,
+  name: string,
+  users: User[],
 }
 
 export interface AuthJwtResponse {
@@ -36,3 +39,28 @@ export interface RefreshTokenResponse {
   refreshToken: string,
 }
 
+export interface Contact {
+  id: number,
+  avatar: string,
+  name: string,
+  credentials: {
+    mail: string,
+    password: string
+  },
+  GroupsOrUsers: User[] | Group[],
+  isGroup: boolean
+}
+export enum NotifType {
+  FRIEND_REQUEST, OTHER
+}
+export interface Notif {
+  id: number,
+  type: NotifType
+  sender: User,
+  date: Date,
+}
+
+export interface FriendRequestNotif extends Notif {
+  receiver: User,
+  accepted: boolean,
+}
