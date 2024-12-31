@@ -71,13 +71,13 @@
 <div class="flex-center justify-between gap-4 w-full p-4">
   <div class="flex-center justify-start gap-4">
     @if (currentAvatarUrl) {
-    <img
-      [src]="currentAvatarUrl"
-      alt=""
-      class="w-12 h-12 object-contain rounded-full"
-    />
-    }@else {
-    <p-inputIcon styleClass="pi pi-user" />
+      <img
+        [src]="currentAvatarUrl"
+        alt=""
+        class="w-12 h-12 object-contain rounded-full"
+      />
+    } @else {
+      <p-inputIcon styleClass="pi pi-user" />
     }
     <p class="font-semibold">{{ userInfoService.currentUser.username }}</p>
   </div>
@@ -87,7 +87,7 @@
       styleClass="pi pi-ellipsis-v"
       class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
     />
-    <span class="p-overlay-badge">
+    <span class="p-overlay-badge" (click)="openNotif()">
       <p-inputIcon
         styleClass="pi pi-bell"
         class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"

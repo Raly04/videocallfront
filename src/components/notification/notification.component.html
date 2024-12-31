@@ -1,0 +1,19 @@
+<div class="w-full">
+  @for (notif of notifs(); track $index) {
+    <div class="flex items-center p-4 border-b border-gray-200 bg-blue-50">
+      <img
+        src="assets/avatar.jpg"
+        alt="Sender Avatar"
+        class="w-12 h-12 rounded-full mr-4"
+      />
+      <div class="flex-1">
+        <div class="font-bold">{{ notif.sender.username }}</div>
+        <div class="text-gray-600 text-sm">{{ notif.type }}</div>
+        <div class="text-gray-800">
+          Hey, I just wanted to check in about the project status...
+        </div>
+        <div class="text-gray-500 text-xs">{{ notif.date | date }}</div>
+      </div>
+    </div>
+  }
+</div>

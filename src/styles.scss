@@ -12,10 +12,10 @@
   @tailwind utilities;
 }
 
-body{
+body {
   font-family: "Inter var", sans-serif !important;
 }
-.line{
+.line {
   @apply bg-secondary h-0.5 w-full;
 }
 
@@ -23,10 +23,12 @@ body{
   padding: 0;
 }
 
-app-account , app-message{
+app-account,
+app-message,
+app-notification {
   @apply w-5/6 p-8;
 }
 
-.flex-center{
+.flex-center {
   @apply flex flex-row items-center;
 }
