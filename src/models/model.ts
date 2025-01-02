@@ -7,6 +7,7 @@ export interface User {
   mail: string,
   groups: Group[],
   password: string
+  contacts : User[];
 }
 
 export interface AuthResponse {
@@ -51,7 +52,7 @@ export interface Contact {
   isGroup: boolean
 }
 export enum NotifType {
-  FRIEND_REQUEST, OTHER
+  FRIEND_REQUEST = "FRIEND_REQUEST", OTHER = "OTHER"
 }
 export interface Notif {
   id: number,

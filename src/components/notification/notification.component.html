@@ -1,8 +1,8 @@
 <div class="w-full">
   @for (notif of notifs(); track $index) {
-    <div class="flex items-center p-4 border-b border-gray-200 bg-blue-50">
+    <div class="flex items-center p-4 border-b rounded-md border-gray-200 bg-blue-50">
       <img
-        src="assets/avatar.jpg"
+        [src]="avatarUrls.get(notif.sender.id)"
         alt="Sender Avatar"
         class="w-12 h-12 rounded-full mr-4"
       />
@@ -14,6 +14,16 @@
         </div>
         <div class="text-gray-500 text-xs">{{ notif.date | date }}</div>
       </div>
+      @if (notif.type === 'FRIEND_REQUEST') {
+        <div class="flex gap-2 mt-2">
+          <button (click)="addContact(notif.sender.id)" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
+            <i class="pi pi-check mr-2"></i> Accept
+          </button>
+          <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center">
+            <i class="pi pi-times mr-2"></i> Reject
+          </button>
+        </div>
+      }
     </div>
   }
 </div>

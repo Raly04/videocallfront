@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { USER_API } from "../data/const";
 import { StorageService } from "./storage.service";
 import { catchError, switchMap } from "rxjs/operators";
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class UserService {
   authenticate(user: User) {
     console.log(user);
     return this.httpClient.post<AuthResponse>(USER_API + "/authenticate", user);
+  }
+
+  addContact(userId : number , contactId : number) {
+    return this.httpClient.get<User>(USER_API + "/addContact/"+userId+"/"+contactId);
   }
 
   register(user: User) {

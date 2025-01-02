@@ -3,6 +3,7 @@ import { Contact, Group, User } from "./model";
 export function contactToUser(contact: Contact): User {
   return {
     id: contact.id,
+    contacts : [],
     avatar: contact.avatar,
     username: contact.name,
     mail: contact.credentials.mail,
