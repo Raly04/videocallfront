@@ -18,9 +18,15 @@ export interface AuthResponse {
 export interface Mess {
   id: number,
   content: string,
-  sender: User,
-  receiver: User | Group,
+  sender: number,
+  type : MessageType,
+  receiver: number,
   date: Date,
+}
+
+export enum MessageType {
+  USER = 'USER',
+  GROUP = 'GROUP'
 }
 
 export interface Group {

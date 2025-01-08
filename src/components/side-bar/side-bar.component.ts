@@ -35,8 +35,6 @@ import { MessageService } from "primeng/api";
     TabViewModule,
     ListboxModule,
     FormsModule,
-    AsyncPipe,
-    NgOptimizedImage,
     BadgeModule,
     ButtonModule,
   ],
@@ -56,6 +54,7 @@ export class SideBarComponent {
   allContacts!: Contact[];
   selectedContact!: Contact;
   currentAvatarUrl!: SafeUrl;
+  contactAvatarUrls = new Map<number, SafeUrl>();
 
   notifNumber = signal<number>(0);
 
@@ -84,12 +83,15 @@ export class SideBarComponent {
 
   getAllUsers() {
     this.userService
-      .getAll()
+      .getAllWithoutContacts(this.userInfoService.currentUser.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((res) => {
         this.allContacts = res
           .map((user) => {
-            return userToContact(user);
+            const contact = userToContact(user);
+            // Load avatar for each contact
+            this.loadContactAvatar(contact.id);
+            return contact;
           })
           .filter(
             (contact) => contact.id !== this.userInfoService.currentUser.id,
@@ -100,7 +102,10 @@ export class SideBarComponent {
       .getContacts(this.userInfoService.currentUser.id)
       .subscribe((res) => {
         this.userContacts = res.map((user) => {
-          return userToContact(user);
+          const contact = userToContact(user);
+          // Load avatar for each contact
+          this.loadContactAvatar(contact.id);
+          return contact;
         });
       });
   }
@@ -153,5 +158,18 @@ export class SideBarComponent {
       summary: "Success",
       detail: "You send a friend request to " + notif.receiver?.username,
     });
+  }
+
+  loadContactAvatar(contactId: number): void {
+    this.userService
+      .getUserAvatar(contactId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((blob) => {
+        const objectURL = URL.createObjectURL(blob);
+        this.contactAvatarUrls.set(
+          contactId,
+          this.sanitizer.bypassSecurityTrustUrl(objectURL)
+        );
+      });
   }
 }

@@ -73,7 +73,7 @@ export class ChatService {
   }
 
   sendMessageToUser(recipient: User, content: string) {
-    const message: Partial<Mess> = {
+    const message = {
       sender: this.user,
       receiver: recipient,
       content: content,

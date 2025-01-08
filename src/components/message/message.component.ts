@@ -5,13 +5,16 @@ import { InputTextModule } from "primeng/inputtext";
 import { ChipModule } from "primeng/chip";
 import { DatePipe } from "@angular/common";
 import { UserService } from "../../services/user.service";
-import { Mess, User } from "../../models/model";
+import { Contact, Mess, MessageType, User } from "../../models/model";
 import { ActivatedRoute } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { UserInfoService } from "../../services/user-info.service";
 import { ChatService } from "../../services/chat.service";
 import { FormsModule } from "@angular/forms";
 import { map } from "rxjs";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { userToContact } from '../../models/mapper';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-message',
@@ -20,6 +23,7 @@ import { map } from "rxjs";
     AvatarModule,
     Button,
     InputTextModule,
+    InputIconModule,
     ChipModule,
     DatePipe,
     FormsModule
@@ -40,6 +44,8 @@ export default class MessageComponent {
   activatedRoute = inject(ActivatedRoute);
   destroyRef = inject(DestroyRef);
   chatService = inject(ChatService);
+  contactAvatarUrl !: SafeUrl;
+  sanitizer = inject(DomSanitizer);
 
   constructor() {
     this.currentUserInfo = this.userInfoService.currentUser;
@@ -71,7 +77,7 @@ export default class MessageComponent {
       .subscribe((messageBody) => {
         console.log('Received: ' + messageBody);
         let receivedMessage = JSON.parse(messageBody) as Mess;
-        if (receivedMessage.sender.id === this.receiverUserInfo()?.id && receivedMessage.content.trim()) {
+        if (receivedMessage.sender == this.receiverUserInfo()?.id && receivedMessage.content.trim()) {
           this.conversations.update(conversations => [
             ...conversations,
             receivedMessage
@@ -87,17 +93,26 @@ export default class MessageComponent {
         this.receiverUserInfo.set(res);
         this.chatService.getHistoryBetweenTwoUser(this.currentUserInfo.username, this.receiverUserInfo()?.username as string)
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .pipe(
-            map(messages => messages.map(message => ({
-              ...message,
-              date: new Date(message.date)
-            })))
-          )
           .subscribe((res) => {
             console.log("HISTORY",res)
             this.conversations.set(res);
+            res.forEach((message) => {
+              console.log("MESSAGE",message.sender)
+            });
           })
+          this.loadAvatar(userToContact(res));
       });
+  }
+
+  loadAvatar(contact: Contact): void {
+    if (!contact.isGroup) {
+      this.userService
+        .getUserAvatar(contact.id) // Use contact.id instead of currentUser.id
+        .subscribe((blob) => {
+          const objectURL = URL.createObjectURL(blob);
+          this.contactAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        });
+    }
   }
 
   send() {
@@ -106,9 +121,10 @@ export default class MessageComponent {
         ...conversations,
         {
           id: 0,
-          sender: this.currentUserInfo,
-          receiver: this.receiverUserInfo()!,
+          sender: this.currentUserInfo.id,
+          receiver: this.receiverUserInfo()!.id,
           content: this.message.trim(),
+          type : MessageType.USER,
           date : new Date(),
         }
       ]);

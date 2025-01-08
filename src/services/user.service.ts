@@ -45,6 +45,10 @@ export class UserService {
     return this.httpClient.get<User[]>(USER_API + "/getAll");
   }
 
+  getAllWithoutContacts(id : number) {
+    return this.httpClient.get<User[]>(USER_API + "/getAllWithoutContact/"+id);
+  }
+
   getContacts(id : number) : Observable<User[]> {
     return this.httpClient.get<User[]>(USER_API + "/contacts/"+id);
   }
