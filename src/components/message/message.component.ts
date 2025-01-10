@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal, ViewChild, ElementRef } from '@angular/core';
 import { AvatarModule } from "primeng/avatar";
 import { Button } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
@@ -33,6 +33,8 @@ import { InputIconModule } from 'primeng/inputicon';
 })
 
 export default class MessageComponent {
+  @ViewChild('messageContainer') private messageContainer!: ElementRef;
+
   message: string = "";
   conversations = signal<Mess[]>([]);
   currentUserInfo!: User;
@@ -82,6 +84,7 @@ export default class MessageComponent {
             ...conversations,
             receivedMessage
           ]);
+          setTimeout(() => this.scrollToBottom(), 100); // Scroll after DOM update
         }
       });
   }
@@ -99,6 +102,7 @@ export default class MessageComponent {
             res.forEach((message) => {
               console.log("MESSAGE",message.sender)
             });
+            setTimeout(() => this.scrollToBottom(), 100);
           })
           this.loadAvatar(userToContact(res));
       });
@@ -113,6 +117,13 @@ export default class MessageComponent {
           this.contactAvatarUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
         });
     }
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const container = this.messageContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    } catch (err) {}
   }
 
   send() {
@@ -131,7 +142,8 @@ export default class MessageComponent {
       if(this.receiverUserInfo()){
         this.chatService.sendMessageToUser(this.receiverUserInfo() as User, this.message.trim());
       }
-      this.message = ""; // Clear the message after sending
+      this.message = "";
+      setTimeout(() => this.scrollToBottom(), 100); // Scroll after DOM update
     }
   }
 }

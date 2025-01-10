@@ -75,7 +75,7 @@ export class SideBarComponent {
       .subscribe((notifBody) => {
         console.log("Received: " + notifBody);
         let receivedNotif = JSON.parse(notifBody) as FriendRequestNotif;
-        if (receivedNotif?.sender?.id) {
+        if (receivedNotif?.sender) {
           this.notifNumber.update((value) => value + 1);
         }
       });
