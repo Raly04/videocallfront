@@ -1,10 +1,10 @@
-import {inject, Injectable} from '@angular/core';
-import {map} from "rxjs";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {RxStompConfig} from "@stomp/rx-stomp";
-import {FriendRequestNotif, Group, Mess, User} from "../models/model";
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { RxStompService } from "@stomp/ng2-stompjs";
+import { RxStompConfig } from "@stomp/rx-stomp";
+import { map } from "rxjs";
 import { MESSAGE_API } from '../data/const';
+import { FriendRequestNotif, Group, Mess, MessageType, User } from "../models/model";
 
 const rxStompConfig: RxStompConfig = {
   // Which server?
@@ -74,18 +74,19 @@ export class ChatService {
 
   sendMessageToUser(recipient: User, content: string) {
     const message = {
-      sender: this.user,
-      receiver: recipient,
+      senderId: this.user.id,
+      receiverId: recipient.id,
       content: content,
-      date : new Date()
+      type: MessageType.USER,
+      date: new Date()
     };
-    console.log("MESSAGE : " , message);
+    console.log("MESSAGE : ", message);
 
-    this.rxStompService.publish({destination: '/app/sendToUser', body: JSON.stringify(message)});
+    this.rxStompService.publish({ destination: '/app/sendToUser', body: JSON.stringify(message) });
   }
 
-  notifyFriendRequest(notif : Partial<FriendRequestNotif>){
-    this.rxStompService.publish({destination: '/app/friendRequestNotif', body: JSON.stringify(notif)});
+  notifyFriendRequest(notif: Partial<FriendRequestNotif>) {
+    this.rxStompService.publish({ destination: '/app/friendRequestNotif', body: JSON.stringify(notif) });
   }
 
   watchMessages() {
@@ -93,12 +94,12 @@ export class ChatService {
     return this.rxStompService.watch(`/queue/${this.user.id}`);
   }
 
-  watchNotifs(){
+  watchNotifs() {
     // Subscribe to notifications
     return this.rxStompService.watch(`/notif/${this.user.id}`);
   }
 
-  getHistoryBetweenTwoUser(from : string, to : string){
-    return this.httpClient.post<Mess[]>(MESSAGE_API+"/getHistoryBetweenTwoUser" , {from,to})
+  getHistoryBetweenTwoUser(from: string, to: string) {
+    return this.httpClient.post<Mess[]>(MESSAGE_API + "/getHistoryBetweenTwoUser", { from, to })
   }
 }

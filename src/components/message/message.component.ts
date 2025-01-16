@@ -1,20 +1,20 @@
-import { Component, DestroyRef, effect, inject, signal, ViewChild, ElementRef } from '@angular/core';
+import { DatePipe } from "@angular/common";
+import { Component, DestroyRef, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ActivatedRoute } from "@angular/router";
 import { AvatarModule } from "primeng/avatar";
 import { Button } from "primeng/button";
-import { InputTextModule } from "primeng/inputtext";
 import { ChipModule } from "primeng/chip";
-import { DatePipe } from "@angular/common";
-import { UserService } from "../../services/user.service";
-import { Contact, Mess, MessageType, User } from "../../models/model";
-import { ActivatedRoute } from "@angular/router";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { UserInfoService } from "../../services/user-info.service";
-import { ChatService } from "../../services/chat.service";
-import { FormsModule } from "@angular/forms";
-import { map } from "rxjs";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { userToContact } from '../../models/mapper';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from "primeng/inputtext";
+import { map } from "rxjs";
+import { userToContact } from '../../models/mapper';
+import { Contact, Mess, MessageType, User } from "../../models/model";
+import { ChatService } from "../../services/chat.service";
+import { UserInfoService } from "../../services/user-info.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-message',
@@ -79,7 +79,7 @@ export default class MessageComponent {
       .subscribe((messageBody) => {
         console.log('Received: ' + messageBody);
         let receivedMessage = JSON.parse(messageBody) as Mess;
-        if (receivedMessage.sender == this.receiverUserInfo()?.id && receivedMessage.content.trim()) {
+        if (receivedMessage.senderId == this.receiverUserInfo()?.id && receivedMessage.content.trim()) {
           this.conversations.update(conversations => [
             ...conversations,
             receivedMessage
@@ -100,7 +100,7 @@ export default class MessageComponent {
             console.log("HISTORY",res)
             this.conversations.set(res);
             res.forEach((message) => {
-              console.log("MESSAGE",message.sender)
+              console.log("MESSAGE",message.senderId)
             });
             setTimeout(() => this.scrollToBottom(), 100);
           })
@@ -132,8 +132,8 @@ export default class MessageComponent {
         ...conversations,
         {
           id: 0,
-          sender: this.currentUserInfo.id,
-          receiver: this.receiverUserInfo()!.id,
+          senderId: this.currentUserInfo.id,
+          receiverId: this.receiverUserInfo()!.id,
           content: this.message.trim(),
           type : MessageType.USER,
           date : new Date(),

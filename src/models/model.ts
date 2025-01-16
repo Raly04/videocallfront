@@ -1,4 +1,3 @@
-import { Avatar } from "primeng/avatar"
 
 export interface User {
   id: number,
@@ -18,9 +17,9 @@ export interface AuthResponse {
 export interface Mess {
   id: number,
   content: string,
-  sender: number,
+  senderId: number,
   type : MessageType,
-  receiver: number,
+  receiverId: number,
   date: Date,
 }
 
@@ -64,6 +63,7 @@ export interface Notif {
   id: number,
   type: NotifType
   sender: User,
+  seen:boolean,
   date: Date,
 }
 

@@ -1,28 +1,26 @@
 import { Component, DestroyRef, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormsModule } from "@angular/forms";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
+import { BadgeModule } from "primeng/badge";
+import { ButtonModule } from "primeng/button";
 import { IconFieldModule } from "primeng/iconfield";
 import { InputIconModule } from "primeng/inputicon";
 import { InputTextModule } from "primeng/inputtext";
-import { TabViewModule } from "primeng/tabview";
-import { UserService } from "../../services/user.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ListboxModule } from "primeng/listbox";
-import { FormsModule } from "@angular/forms";
+import { TabViewModule } from "primeng/tabview";
+import { map } from "rxjs";
+import { contactToUser, userToContact } from "../../models/mapper";
 import {
   Contact,
   FriendRequestNotif,
-  NotifType,
-  User,
+  NotifType
 } from "../../models/model";
-import { AsyncPipe, NgOptimizedImage } from "@angular/common";
-import { Router } from "@angular/router";
-import { BadgeModule } from "primeng/badge";
-import { UserInfoService } from "../../services/user-info.service";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { ButtonModule } from "primeng/button";
-import { contactToUser, userToContact } from "../../models/mapper";
 import { ChatService } from "../../services/chat.service";
-import { map } from "rxjs";
-import { MessageService } from "primeng/api";
+import { UserInfoService } from "../../services/user-info.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: "app-side-bar",
@@ -149,9 +147,11 @@ export class SideBarComponent {
     const notif: Partial<FriendRequestNotif> = {
       type: NotifType.FRIEND_REQUEST,
       accepted: false,
+      seen : false,
       sender: this.userInfoService.currentUser,
       receiver: contactToUser(contact),
     };
+    console.log(notif)
     this.chatService.notifyFriendRequest(notif);
     this.messageService.add({
       severity: "success",
