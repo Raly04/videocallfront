@@ -11,6 +11,7 @@ import { InputIconModule } from "primeng/inputicon";
 import { InputTextModule } from "primeng/inputtext";
 import { ListboxModule } from "primeng/listbox";
 import { TabViewModule } from "primeng/tabview";
+import { ToastModule } from "primeng/toast";
 import { map } from "rxjs";
 import { contactToUser, userToContact } from "../../models/mapper";
 import {
@@ -27,6 +28,7 @@ import { UserService } from "../../services/user.service";
   providers: [MessageService],
   standalone: true,
   imports: [
+    ToastModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
@@ -151,13 +153,16 @@ export class SideBarComponent {
       sender: this.userInfoService.currentUser,
       receiver: contactToUser(contact),
     };
-    console.log(notif)
-    this.chatService.notifyFriendRequest(notif);
-    this.messageService.add({
-      severity: "success",
-      summary: "Success",
-      detail: "You send a friend request to " + notif.receiver?.username,
-    });
+    try {
+      this.chatService.notifyFriendRequest(notif);
+      this.messageService.add({
+        severity: "success",
+        summary: "Success",
+        detail: "You send a friend request to " + notif.receiver?.username,
+      });
+    } catch (error) {
+      this.messageService.add({severity: "error", summary: "Error", detail: "Failed to send friend request"});
+    }
   }
 
   loadContactAvatar(contactId: number): void {

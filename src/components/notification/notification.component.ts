@@ -1,16 +1,17 @@
-import { Component, DestroyRef, inject, signal } from "@angular/core";
-import { UserInfoService } from "../../services/user-info.service";
-import { NotificationService } from "../../services/notification.service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Notif, User } from "../../models/model";
 import { DatePipe } from "@angular/common";
-import { UserService } from "../../services/user.service";
+import { Component, DestroyRef, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { ButtonModule } from "primeng/button";
+import { FriendRequestNotif, Notif, NotifType, User } from "../../models/model";
+import { NotificationService } from "../../services/notification.service";
+import { UserInfoService } from "../../services/user-info.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: "app-notification",
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, ButtonModule],
   templateUrl: "./notification.component.html",
   styleUrl: "./notification.component.scss",
 })
@@ -36,18 +37,23 @@ export default class NotificationComponent {
       .subscribe((blob) => {
         const objectURL = URL.createObjectURL(blob);
         this.avatarUrls.set(
-          senderId, 
+          senderId,
           this.sanitizer.bypassSecurityTrustUrl(objectURL)
         );
       });
   }
 
-  addContact(senderId : number) {
-    this.userService.addContact(this.currentUserInfo.id , senderId)
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe((res)=>{
-      console.log(res)
-    });
+  // Add type guard function
+  isFriendRequest(notif: Notif): notif is FriendRequestNotif {
+    return notif.type === NotifType.FRIEND_REQUEST;
+  }
+
+  addContact(senderId: number) {
+    this.userService.addContact(this.currentUserInfo.id, senderId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        console.log(res)
+      });
   }
 
   getNotifications() {

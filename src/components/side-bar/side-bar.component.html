@@ -1,4 +1,5 @@
 <div class="p-4">
+  <p-toast />
   <p-tabView>
     <p-tabPanel>
       <ng-template pTemplate="header">
@@ -8,25 +9,14 @@
         </div>
       </ng-template>
       <div>
-        <p-listbox
-          [filter]="true"
-          [listStyle]="{ 'max-height': '220px' }"
-          [(ngModel)]="selectedContact"
-          (onChange)="openChat()"
-          [options]="userContacts"
-          filterPlaceHolder="Search"
-          optionLabel="name"
-        >
+        <p-listbox [filter]="true" [listStyle]="{ 'max-height': '220px' }" [(ngModel)]="selectedContact"
+          (onChange)="openChat()" [options]="userContacts" filterPlaceHolder="Search" optionLabel="name">
           <ng-template let-contact pTemplate="item">
             <div class="flex flex-row items-center gap-4">
               @if (contactAvatarUrls.get(contact.id)) {
-                <img 
-                  [src]="contactAvatarUrls.get(contact.id)" 
-                  class="w-12 h-12 rounded-full object-cover"
-                  alt=""
-                />
+              <img [src]="contactAvatarUrls.get(contact.id)" class="w-12 h-12 rounded-full object-cover" alt="" />
               } @else {
-                <p-inputIcon styleClass="pi pi-user" />
+              <p-inputIcon styleClass="pi pi-user" />
               }
               <div class="flex flex-col items-start justify-center">
                 <div class="text-sm">{{ contact.name }}</div>
@@ -45,38 +35,23 @@
         </div>
       </ng-template>
       <div>
-        <p-listbox
-          [filter]="true"
-          [listStyle]="{ 'max-height': '220px' }"
-          [(ngModel)]="selectedContact"
-          [options]="allContacts"
-          filterPlaceHolder="Search"
-          optionLabel="name"
-        >
+        <p-listbox [filter]="true" [listStyle]="{ 'max-height': '220px' }" [(ngModel)]="selectedContact"
+          [options]="allContacts" filterPlaceHolder="Search" optionLabel="name">
           <ng-template let-contact pTemplate="item">
             <div class="flex flex-row items-center justify-between w-full">
               <div class="flex-center gap-4">
                 @if (contactAvatarUrls.get(contact.id)) {
-                  <img 
-                    [src]="contactAvatarUrls.get(contact.id)" 
-                    class="w-12 h-12 rounded-full object-cover"
-                    alt=""
-                  />
+                <img [src]="contactAvatarUrls.get(contact.id)" class="w-12 h-12 rounded-full object-cover" alt="" />
                 } @else {
-                  <p-inputIcon styleClass="pi pi-user" />
+                <p-inputIcon styleClass="pi pi-user" />
                 }
                 <div class="flex flex-col items-start justify-center">
                   <div class="text-sm">{{ contact.name }}</div>
                   <div class="p-text-secondary text-vsm">Last message</div>
                 </div>
               </div>
-              <p-button
-                icon="pi pi-user-plus"
-                [rounded]="true"
-                [text]="true"
-                size="small"
-                (onClick)="sendFriendRequest(contact)"
-              />
+              <p-button icon="pi pi-user-plus" [rounded]="true" [text]="true" size="small"
+                (onClick)="sendFriendRequest(contact)" />
             </div>
           </ng-template>
         </p-listbox>
@@ -87,28 +62,20 @@
 <div class="flex-center justify-between gap-4 w-full p-4">
   <div class="flex-center justify-start gap-4">
     @if (currentAvatarUrl) {
-      <img
-        [src]="currentAvatarUrl"
-        alt=""
-        class="w-12 h-12 object-cover rounded-full"
-      />
+    <img [src]="currentAvatarUrl" alt="" class="w-12 h-12 object-cover rounded-full" />
     } @else {
-      <p-inputIcon styleClass="pi pi-user" />
+    <p-inputIcon styleClass="pi pi-user" />
     }
     <p class="font-semibold">{{ userInfoService.currentUser.username }}</p>
   </div>
   <div class="flex-center justify-center gap-2">
-    <p-inputIcon
-      (click)="openUserAccount()"
-      styleClass="pi pi-ellipsis-v"
-      class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
-    />
+    <p-inputIcon (click)="openUserAccount()" styleClass="pi pi-ellipsis-v"
+      class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer" />
     <span class="p-overlay-badge" (click)="openNotif()">
-      <p-inputIcon
-        styleClass="pi pi-bell"
-        class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"
-      ></p-inputIcon>
-      <p-badge [value]="notifNumber()"></p-badge>
+      <p-inputIcon styleClass="pi pi-bell"
+        class="w-6 h-6 flex items-center justify-center rounded-md hover:bg-secondary transition cursor-pointer"></p-inputIcon>
+      @if (notifNumber() > 0) { <p-badge [value]="notifNumber()"></p-badge>
+      }
     </span>
   </div>
 </div>

@@ -1,29 +1,31 @@
 <div class="w-full">
   @for (notif of notifs(); track $index) {
-    <div class="flex items-center p-4 border-b rounded-md border-gray-200 bg-blue-50">
-      <img
-        [src]="avatarUrls.get(notif.sender.id)"
-        alt="Sender Avatar"
-        class="w-12 h-12 rounded-full mr-4"
-      />
-      <div class="flex-1">
-        <div class="font-bold">{{ notif.sender.username }}</div>
-        <div class="text-gray-600 text-sm">{{ notif.type }}</div>
-        <div class="text-gray-800">
-          Hey, I just wanted to check in about the project status...
-        </div>
-        <div class="text-gray-500 text-xs">{{ notif.date | date }}</div>
+  <div class="flex items-center p-4 border-b rounded-md border-gray-200" [class]="{ 'bg-bg-blue-50': !notif.seen}">
+    <img [src]="avatarUrls.get(notif.sender.id)" alt="Sender Avatar" class="w-12 h-12 rounded-full mr-4" />
+    <div class="flex-1">
+      <div class="font-bold">{{ notif.sender.username }}</div>
+      <div class="text-gray-600 text-sm">{{ notif.type }}</div>
+      <div class="text-gray-800">
+        Hey, I just wanted to check in about the project status...
       </div>
-      @if (notif.type === 'FRIEND_REQUEST') {
-        <div class="flex gap-2 mt-2">
-          <button (click)="addContact(notif.sender.id)" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
-            <i class="pi pi-check mr-2"></i> Accept
-          </button>
-          <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center">
-            <i class="pi pi-times mr-2"></i> Reject
-          </button>
-        </div>
-      }
+      <div class="text-gray-500 text-xs">{{ notif.date | date:'medium' }}</div>
     </div>
+    @if (isFriendRequest(notif) && !notif.accepted) {
+    <div class="flex gap-2 mt-2">
+      <button (click)="addContact(notif.sender.id)"
+        class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center">
+        <i class="pi pi-check mr-2"></i> Accept
+      </button>
+      <button class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center">
+        <i class="pi pi-times mr-2"></i> Reject
+      </button>
+    </div>
+    } @else {
+    <div class="flex gap-2 mt-2">
+      <p-button icon="pi pi-check-circle" [text]="true" severity="secondary"></p-button>
+      <p-button icon="pi pi-trash" severity="danger"></p-button>
+    </div>
+    }
+  </div>
   }
 </div>

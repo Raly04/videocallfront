@@ -1,19 +1,18 @@
 import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { Button } from "primeng/button";
 import { DialogModule } from "primeng/dialog";
-import { InputTextModule } from "primeng/inputtext";
 import { IconFieldModule } from "primeng/iconfield";
 import { InputIconModule } from "primeng/inputicon";
+import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { UserService } from "../../services/user.service";
 import { User } from "../../models/model";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Router, RouterLink, RouterLinkActive } from "@angular/router";
-import { NgOptimizedImage } from "@angular/common";
+import { ChatService } from '../../services/chat.service';
 import { StorageService } from "../../services/storage.service";
 import { UserInfoService } from "../../services/user-info.service";
-import { ChatService } from '../../services/chat.service';
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-nav-bar',
@@ -28,7 +27,6 @@ import { ChatService } from '../../services/chat.service';
     ReactiveFormsModule,
     RouterLink,
     RouterLinkActive,
-    NgOptimizedImage
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss',
@@ -91,6 +89,23 @@ export class NavBarComponent {
       .subscribe(
         res => {
           console.log(res)
+          this.userService.authenticate(user)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(
+              res => {
+                if (res.content.length === 2) {
+                  this.router.navigateByUrl("/index").then(r => console.log(r));
+                  this.userInfoService.setCurrentUser(res.user);
+                  //Define websocket credentials
+                  this.chatService.setWebSocketCredentials(
+                    user,
+                    user.groups
+                  );
+                  this.storage.set("accessToken", res.content[0]);
+                  this.storage.set("refreshToken", res.content[1]);
+                }
+              }
+            );
         }
       );
   }

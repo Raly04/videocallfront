@@ -47,7 +47,7 @@
         <p-button [text]="true" icon="pi pi-camera" size="small" />
         <p-button [text]="true" icon="pi pi-image" size="small" />
       </div>
-      <input class="w-full text-sm" pInputText placeholder="Tap here ..." [(ngModel)]="message"/>
+      <input (keydown.enter)="send()" class="w-full text-sm" pInputText placeholder="Tap here ..." [(ngModel)]="message"/>
       <p-button [text]="true" icon="pi pi-send" size="small" (click)="send()" />
     </div>
   </div>
